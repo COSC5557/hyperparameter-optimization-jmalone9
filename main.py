@@ -34,7 +34,7 @@ t0 = time.time()
 rf = RandomForestClassifier(random_state=99)
 rf.fit(x_train, y_train)
 y_pred = rf.predict(x_test)
-outputScore("Random Forest Default")
+#outputScore("Random Forest Default")
 acc1 = accuracy_score(y_test, y_pred) * 100
 t1 = time.time()
 total = t1-t0
@@ -60,7 +60,8 @@ bestModel.fit(x_train, y_train)
 y_pred = bestModel.predict(x_test)
 acc2 = accuracy_score(y_test, y_pred) * 100
 accChange = acc2 - acc1
-outputScore("Random Forest GridSearch")
+print("Best Paremeters found by gridsearch random forest: ", rf.best_params_)
+#outputScore("Random Forest GridSearch")
 #print("Best Parameters: ", rf.best_params_, "\n")
 t1 = time.time()
 total = t1-t0
@@ -74,12 +75,14 @@ opt.fit(x_train, y_train)
 #print("Best Paremeters found by baysesian: ", opt.best_params_)
 y_pred = opt.predict(x_test)
 testAcc = accuracy_score(y_test, y_pred) * 100
-outputScore("Random Forest Bayesian")
+print("Best Paremeters found by baysesian random forest: ", opt.best_params_)
+#outputScore("Random Forest Bayesian")
 t1 = time.time()
 total = t1-t0
 times.append(total)
 algorithms.append("Random Forest Bayesian")
 accuracies.append(testAcc)
+
 ############################################################################################################################################################################
 #nearest neighbor classifier
 ############################################################################################################################################################################
@@ -87,7 +90,7 @@ t0 = time.time()
 knn = KNeighborsClassifier() 
 knn.fit(x_train, y_train)
 y_pred = knn.predict(x_test)
-outputScore("Nearest Neighbors Default")
+#outputScore("Nearest Neighbors Default")
 acc1 = accuracy_score(y_test, y_pred) * 100
 t1 = time.time()
 total = t1-t0
@@ -111,7 +114,8 @@ bestModel.fit(x_train, y_train)
 y_pred = bestModel.predict(x_test)
 acc2 = accuracy_score(y_test, y_pred) * 100
 accChange = acc2 - acc1
-outputScore("Nearest Neighbors GridSearch")
+print("Best Paremeters found by gridsearch knn: ", knn.best_params_)
+#outputScore("Nearest Neighbors GridSearch")
 t1 = time.time()
 total = t1-t0
 times.append(total)
@@ -122,10 +126,10 @@ accuracies.append(acc2)
 t0 = time.time()
 opt = BayesSearchCV(KNeighborsClassifier() , params, n_jobs = 10, scoring = 'accuracy', verbose = 0, random_state = 99, n_iter = 15, cv = 5, return_train_score = True)
 opt.fit(x_train, y_train)
-#print("Best Paremeters found by baysesian: ", opt.best_params_)
+print("Best Paremeters found by baysesian knn: ", opt.best_params_)
 y_pred = opt.predict(x_test)
 testAcc = accuracy_score(y_test, y_pred) * 100
-print("Accuracy Score for ","Nearest Neighbors Bayesian",testAcc,"%")
+#print("Accuracy Score for ","Nearest Neighbors Bayesian",testAcc,"%")
 t1 = time.time()
 total = t1-t0
 times.append(total)
@@ -140,11 +144,14 @@ accuracies.append(testAcc)
 '''algorithms.append("Nearest Neighbors GridSearch")
 accuracies.append(acc1)
 '''
-plt.figure(figsize = (10,4))
-plt.barh(algorithms, accuracies)
-plt.xlabel("Accuracy")
+plt.figure(figsize = (10,6))
+plt.barh(algorithms, accuracies, align = 'edge', height = 0.4)
+plt.barh(algorithms, times, align = 'edge', height = -0.4)
+
+plt.legend({'Accuracy (Percent)':'blue', 'Time (Seconds)':'orange'}, loc='lower right', bbox_to_anchor=(1.25, 0))
+plt.xlabel("Accuracy and Time")
 plt.ylabel("Algorithms")
-plt.title("Algorithms with Accuracy")
+plt.title("Algorithms with Accuracy/Time")
 plt.show()
 
 #code for this from https://stackoverflow.com/questions/48053979/print-2-lists-side-by-side user SCB
