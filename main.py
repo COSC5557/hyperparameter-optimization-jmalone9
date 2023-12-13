@@ -25,8 +25,6 @@ def outputScore(name):
     #print("Accuracy Score for ",name,": {0:.5}%".format(acc))
     print("Accuracy Score for ",name,acc,"%")
     
-#make function for evaluation here
-
 ############################################################################################################################################################################
 #random forest classifier
 ############################################################################################################################################################################
@@ -45,11 +43,11 @@ accuracies.append(acc1)
 
 t0 = time.time()
 params = {
-    #'bootstrap': [True], #always says best is true though its not default
+    'bootstrap': [True, False], #always says best is true though its not default
     'max_depth': [25, 50, None], #default is none
-    'n_estimators': [75, 100, 125], #higher seemingly always better, default is 100
-    'min_samples_split': [2, 4, 6], #default values (the first one) seems to always be chosen
-    'min_samples_leaf': [1, 3, 5] #default values (the first one) seems to always be chosen
+    'n_estimators': [25, 50, 75, 100, 125, 150], #higher seemingly always better, default is 100
+    'min_samples_split': [2, 4, 6, 8], #default values (the first one) seems to always be chosen
+    'min_samples_leaf': [1, 3, 5, 7] #default values (the first one) seems to always be chosen
     #'warm_start': [True] #always says best is true though its not default
 }
 
@@ -70,7 +68,7 @@ algorithms.append("Random Forest GridSearch")
 accuracies.append(acc2)
 
 t0 = time.time()
-opt = BayesSearchCV(RandomForestClassifier(random_state = 99), params, n_jobs = 10, scoring = 'accuracy', verbose = 0, random_state = 99, n_iter = 15, cv = 5, return_train_score = True)
+opt = BayesSearchCV(RandomForestClassifier(random_state = 99), params, n_jobs = 15, scoring = 'accuracy', verbose = 0, random_state = 99, n_iter = 15, cv = 5, return_train_score = True)
 opt.fit(x_train, y_train)
 #print("Best Paremeters found by baysesian: ", opt.best_params_)
 y_pred = opt.predict(x_test)
@@ -104,7 +102,8 @@ params = {
     'n_neighbors': [3, 4, 5, 6, 10], #default 5 used small numbers for this because it never picks the big ones
     'leaf_size': [10, 30, 50, 100, 200], #in this problem leaf size doesnt seem to affect accuracy
     'algorithm': ['ball_tree', 'kd_tree', 'brute', 'auto'],
-    'p': [1, 2] 
+    'p': [1, 2],
+    'weights': ['uniform', 'distance']
 }
 
 knn = GridSearchCV(estimator = knn, param_grid = params, scoring='accuracy', cv = 5, n_jobs = -1)
@@ -124,7 +123,7 @@ accuracies.append(acc2)
 #print("Best Parameters: ", knn.best_params_, "\n")
 
 t0 = time.time()
-opt = BayesSearchCV(KNeighborsClassifier() , params, n_jobs = 10, scoring = 'accuracy', verbose = 0, random_state = 99, n_iter = 15, cv = 5, return_train_score = True)
+opt = BayesSearchCV(KNeighborsClassifier() , params, n_jobs = 15, scoring = 'accuracy', verbose = 0, random_state = 99, n_iter = 15, cv = 5, return_train_score = True)
 opt.fit(x_train, y_train)
 print("Best Paremeters found by baysesian knn: ", opt.best_params_)
 y_pred = opt.predict(x_test)
