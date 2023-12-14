@@ -68,7 +68,7 @@ algorithms.append("Random Forest GridSearch")
 accuracies.append(acc2)
 
 t0 = time.time()
-opt = BayesSearchCV(RandomForestClassifier(random_state = 99), params, n_jobs = 15, scoring = 'accuracy', verbose = 0, random_state = 99, n_iter = 15, cv = 5, return_train_score = True)
+opt = BayesSearchCV(RandomForestClassifier(random_state = 99), params, n_jobs = 50, scoring = 'accuracy', verbose = 0, random_state = 99, n_iter = 50, cv = 5, return_train_score = True)
 opt.fit(x_train, y_train)
 #print("Best Paremeters found by baysesian: ", opt.best_params_)
 y_pred = opt.predict(x_test)
